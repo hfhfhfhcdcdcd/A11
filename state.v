@@ -1,61 +1,80 @@
 module state(
 input sys_clk,
 input rst_n,
+input Trans_go,//need to be assigned a value from top module
 input [39:0]Data,
 output uart_tx
 );
-/*--------------------parameters declaration-----------------------------*/
-reg  [7:0] data        ;
-reg  send_go           ;
-reg  [3:0]state        ;//in order to circle the Data[39:0]
-wire tx_done           ;
-/*-------------------- instantiate the serial module-----------------------------*/
-send_byte s1(   
-.sys_clk      (sys_clk )   ,
-.rst_n        (rst_n   )   , 
-.time_set     (2)          ,
-.data         (data    )   ,                           
-.send_go      (send_go )   ,
-.uart_tx      (uart_tx )   ,
-.tx_done      (tx_done) 
-);
-/*-------------------------------send_go-----------------------------------*/
+/*---------------------variate declaration---------------------------*/
+reg tx_done;
+reg state;
+reg [39:0]Data1;
+reg [2:0]Data_cnt; //40/8=5;3 bits binary digits can express to 8(D)
+reg all_done;
+/*----------------------different states--------------------------*/
 always @(posedge sys_clk or negedge rst_n) begin
     if (!rst_n) begin
-        send_go<=1;
+        state <= 0;//IDLE
     end
-    else if (tx_done) begin
-        send_go<=1'b1;
+    else if(Trans_go)begin
+        state<=1;//send state
+    end
+    else if(all_done==0)begin
+        state <= 0;//back IDLE state
+    end
+end
+/*----------------------Data_cnt--------------------------*/
+always @(posedge sys_clk or negedge rst_n) begin
+    if (!rst_n) begin
+        Data_cnt <= 0;
+    end
+    else if (Data_cnt<3'd5) begin//40/8=5
+        if(tx_done)begin
+            Data_cnt<=Data_cnt+1;
+        end
+    end
+    else if (Data_cnt==3'd4)&&(tx_done)//clear to zero when add up to the biggest value 
+        Data_cnt<=0;    
+    else
+        Data_cnt<=Data_cnt;
+end
+/*----------------------Data1--------------------------*/
+always @(posedge sys_clk or negedge rst_n) begin
+    if (!rst_n) begin
+        Data1 <= 40'd0;
+    end
+    else if(state)//send state
+        if(tx_done)begin
+        Data1<={Data[7:0],Data[39:32]};
+    end
+    else//IDLE
+        Data1<=Data1;
+end
+/*----------------------different data--------------------------*/
+always @(posedge sys_clk or negedge rst_n) begin
+    if (!rst_n) begin
+        data <= 40'd0;
+    end
+    else if(state==1)begin //send state
+        if (Data_cnt==0) begin
+            data<=Data[7:0];
+        end
+        else //Data_cnt!=0 eg:1,2,3,4
+            data<=Data1[7:0];
+    end
+    else if(state==0)begin //IDLE state
+        data<=40'd0;
+    end
+end
+
+always @(posedge sys_clk or negedge rst_n) begin
+    if (!rst_n) begin
+        state <= 0;
+    end
+    else if(Data_cnt==3'd4)&&(tx_done)begin
+        all_done<=1;
     end
     else
-        send_go<=0;   
+        all_done<=0;
 end
-/*--------------------------------state---------------------------------------*/
-always @(posedge sys_clk or negedge rst_n) begin
-    if (!rst_n) begin
-        state<=0;//idle;
-    end
-    else if(state<5)begin
-        if(tx_done) 
-            state<=state+1;
-        else
-            state<=state;
-    end
-    else
-        state<=0; 
-end
-/*--------------------------------data---------------------------------------*/
-always @(posedge sys_clk or negedge rst_n) begin
-    if (!rst_n) begin
-        data<=8'd0;//0000_0111
-    end
-    else case (state)
-        0:data<=Data[7:0];     //0000_0001                      
-        1:data<=Data[15:8];    //0000_0010    
-        2:data<=Data[23:16];   //0000_0100    
-        3:data<=Data[31:24];   //0000_1000    
-        4:data<=Data[39:32];   //0000_0000    
-        default: data<=8'd0;       
-    endcase
-end
-endmodule 
+endmodule
