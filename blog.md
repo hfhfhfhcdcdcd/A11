@@ -49,10 +49,12 @@ always @(posedge clk or posedge rst) begin
     end
 end
 
-endmodule
-在这个例子中，我们创建了一个40位循环移位寄存器，它接收一个40位输入数据，并在时钟上升沿（posedge clk）时将输入数据循环移位。当复位信号（rst）为高电平时，移位寄存器被清零。
-
- 
-重新生成
 
 
+
+![alt text](<img/first version/屏幕截图 2024-09-11 123229.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123301.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123525.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123530.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123603.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123614.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123707.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123819.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123909.png>) ![alt text](<img/first version/屏幕截图 2024-09-11 123953.png>)
+
+
+*          _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _   _  
+*Clock    
+*         ________________ ___ ___ ___ ___ ___ ___ ___ ___ ___ ___ _________ _____ ___ ___ ___ ___ ___ ___ ___
