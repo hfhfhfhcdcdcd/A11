@@ -22,7 +22,7 @@ initial begin
    rst_n=0;
    #201;
    rst_n=1;
-   #434_000;
+   #868_000;
    $stop;
 end
 endmodule

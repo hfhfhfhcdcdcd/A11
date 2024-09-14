@@ -8,10 +8,8 @@ output reg all_done
 );
 /*---------------------variate declaration---------------------------*/
 wire tx_done;
-reg state;
 reg [39:0]Data1;
 reg [2:0]Data_cnt; //[2:0] =>3 bits binary digits can express to 8(D)
-
 reg send_go;
 reg [7:0]data;
 parameter max = 5;
@@ -25,20 +23,6 @@ send_byte serial_module(
         .uart_tx     (uart_tx  )    ,          
         .tx_done     (tx_done  )
     );
-/*----------------------different states--------------------------*/
-always @(posedge sys_clk or negedge rst_n) begin
-    if (!rst_n) begin
-        state <= 0;//IDLE
-    end
-    else if(Trans_go)begin
-        state<=1;//send state
-    end
-    else if(all_done)begin
-        state <= 0;//back IDLE state
-    end
-    else
-        state <= state;
-end
 /*----------------------Data_cnt--------------------------*/
 always @(posedge sys_clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -79,7 +63,7 @@ always @(posedge sys_clk or negedge rst_n) begin
     if (!rst_n) begin
         send_go<=1;
     end
-    else if(state) begin//send state
+    else if(Trans_go) begin//send state
         if((Data_cnt<max)&&(tx_done))begin
             send_go<=1;
         end
