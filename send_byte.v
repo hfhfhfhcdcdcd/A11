@@ -60,7 +60,7 @@ always@(posedge sys_clk or negedge rst_n)
     if(!rst_n)
         cnt2<=4'd0;//
     else if(send_en)begin
-        if((cnt2>=0)&&(cnt2<10))begin
+        if((cnt2>=0)&&(cnt2<9))begin
             if(cnt==time_cnt-1)
                 cnt2<=cnt2+1;
             else  

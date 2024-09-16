@@ -19,13 +19,16 @@ state state1(
 /*----------------------Trans_go--------------------------*/
 always @(posedge sys_clk or negedge rst_n) begin
     if (!rst_n) begin
-        Trans_go <= 1;
-    end
-    else if (all_done) begin//i have led the "all_done signal" to the top module 
         Trans_go <= 0;
     end
-    else 
-        Trans_go <= Trans_go;
+    else begin 
+        if (all_done) begin//i have led the "all_done signal" to the top module 
+            Trans_go <= 0;
+        end
+        else begin
+            Trans_go <= 1;
+        end
+    end
 end
 /*----------------------Data--------------------------*/
 always @(posedge sys_clk or negedge rst_n) begin
