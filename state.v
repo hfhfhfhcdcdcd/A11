@@ -55,6 +55,9 @@ always @(posedge sys_clk or negedge rst_n) begin
     else if(send_go)begin //send state
         data<=Data1[7:0];
     end
+    else if(all_done)begin//IDLE state
+        data<=7'd0;
+    end
     else
         data<=data;
 end
