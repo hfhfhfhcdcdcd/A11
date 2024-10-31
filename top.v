@@ -1,9 +1,9 @@
 module top (
-    input           sys_clk         ,
-    input           rst_n           ,
-    input [39:0]    Data            ,
-    input [39:0]    length          ,
-    output          uart_tx
+    input            sys_clk         ,
+    input            rst_n           ,
+    output [39:0]    Data            ,
+    output [39:0]    length          ,
+    output           uart_tx
 );
 /*----------------------declaration--------------------------*/
 reg Trans_go;
@@ -31,4 +31,8 @@ always @(posedge sys_clk or negedge rst_n) begin
         end
     end
 end
+/*----------------------Data--------------------------*/
+assign Data =  40'hb1_A2_1e_3f_49;
+/*----------------------length--------------------------*/
+assign length = 40'd40;
 endmodule
