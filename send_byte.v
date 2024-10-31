@@ -3,7 +3,8 @@ input sys_clk         ,
 input rst_n           ,          
 input [2:0] time_set  ,   //Baud rate setting      
 input [7:0] data      ,          
-input send_go         ,          
+input send_go         ,
+input Trans_go        ,          
 output reg uart_tx    ,          
 output reg tx_done  
     );
@@ -28,7 +29,7 @@ always@(*)
 always @(posedge sys_clk) begin
     if(!rst_n)
         r_data<=1'b1;
-    else if (send_go)
+    else if ((Trans_go)&&(!send_go))
         r_data<=data;
     else
         r_data<=r_data;

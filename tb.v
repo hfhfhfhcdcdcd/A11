@@ -19,10 +19,10 @@ initial begin
    sys_clk=0;
    rst_n=0;
    Data = 40'hb1_A2_1e_3f_49;
-   length = 40'd8;
+   length = 40'd4;
    #201;
    rst_n=1;
-   #86800;//(length/8) * 86_800;
+   #43400;//(length/8) * 86_800;
    $stop;
 end
 always #10 sys_clk=~sys_clk;

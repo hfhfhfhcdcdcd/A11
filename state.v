@@ -35,7 +35,8 @@ output  reg           all_done
          .rst_n       (rst_n    )    ,          
          .time_set    (2 )           ,         
          .data        (data     )    ,          
-         .send_go     (send_go  )    ,          
+         .send_go     (send_go  )    ,
+         .Trans_go    (Trans_go )    ,       
          .uart_tx     (uart_tx  )    ,          
          .tx_done     (tx_done  )
      );
